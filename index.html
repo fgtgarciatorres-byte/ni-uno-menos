@@ -1,0 +1,725 @@
+<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
+<title>Ni uno menos</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Caveat:wght@600;700&display=swap">
+<meta name="description" content="Ni uno menos: juego educativo sobre prevención del acoso escolar.">
+<style>
+/* Concepto: un cuaderno de clase con cuadrícula. El subrayador amarillo marca lo importante;
+   las notas amarillas son lo que el juego quiere que el alumnado se lleve. */
+:root{
+  --paper:#eef2f8; --grid:#d6deec; --ink:#17254d; --ink2:#46547a;
+  --hl:#ffe45c; --pen:#2457d6; --card:#ffffff; --line:#c3cee2;
+  --bad:#a8261b; --good:#17704a;
+  --s1:#cde4f6; --s2:#c8cedb; --s3:#8794b6; --s4:#aebbd9; --s5:#9db6d6;
+  --fh:'Caveat',cursive; --fb:'Atkinson Hyperlegible',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --sz:1; --sat:1; --bri:1; --scr:0;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#0e1630; --grid:#18234a; --ink:#e8edfb; --ink2:#a6b2d4;
+    --hl:#f4da4c; --pen:#8bb0ff; --card:#17213f; --line:#2a3860;
+    --bad:#ff8f84; --good:#6fd6a3;
+    --s1:#2a3d6b; --s2:#222d50; --s3:#4a5c92; --s4:#3a4a7e; --s5:#34528a; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#0e1630; --grid:#18234a; --ink:#e8edfb; --ink2:#a6b2d4;
+  --hl:#f4da4c; --pen:#8bb0ff; --card:#17213f; --line:#2a3860;
+  --bad:#ff8f84; --good:#6fd6a3;
+  --s1:#2a3d6b; --s2:#222d50; --s3:#4a5c92; --s4:#3a4a7e; --s5:#34528a; color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{
+  background-color:var(--paper);
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:28px 28px;
+  color:var(--ink); font-family:var(--fb); font-size:calc(17px * var(--sz)); line-height:1.5;
+  padding-block:10px 40px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));
+  padding-right:max(16px,env(safe-area-inset-right,0px));
+}
+.wrap{max-width:700px;margin:0 auto;display:flex;flex-direction:column;gap:14px}
+button{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--pen);outline-offset:2px}
+mark{background:var(--hl);color:#17254d;padding:0 .2em;border-radius:2px}
+h1,h2,h3{margin:0;text-wrap:balance;line-height:1.15}
+p{margin:0}
+.top{display:flex;flex-wrap:wrap;align-items:center;gap:8px;justify-content:space-between}
+.brand{font-family:var(--fh);font-size:2rem;font-weight:700;line-height:1}
+.brand mark{padding:0 .25em}
+.tools{display:flex;flex-wrap:wrap;gap:6px}
+.sm{font-size:.85em;border:2px solid var(--ink);background:var(--card);border-radius:8px;padding:4px 10px;cursor:pointer}
+.sm:hover{background:var(--hl);color:#17254d}
+.help{background:var(--hl);color:#17254d;font-weight:700}
+.card{background:var(--card);border:2px solid var(--ink);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:12px}
+.card.flat{border-color:var(--line)}
+.kicker{font-size:.8em;letter-spacing:.08em;text-transform:uppercase;color:var(--ink2);font-weight:700}
+.big{font-family:var(--fh);font-size:3.2rem;font-weight:700;line-height:.95}
+.lead{font-size:1.1em}
+.btn{border:2px solid var(--ink);background:var(--ink);color:var(--paper);border-radius:10px;padding:10px 16px;cursor:pointer;font-weight:700;align-self:flex-start}
+.btn:hover{background:var(--hl);color:#17254d}
+.btn.ghost{background:var(--card);color:var(--ink)}
+.btn.ghost:hover{background:var(--hl);color:#17254d}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.opts{display:flex;flex-direction:column;gap:2px}
+.opt{display:block;width:100%;text-align:left;background:var(--card);border:2px solid var(--ink);border-radius:10px;padding:12px 14px;margin:6px 0;cursor:pointer;box-shadow:3px 3px 0 var(--ink)}
+.opt:hover,.opt:focus-visible{background:var(--hl);color:#17254d}
+.opt.sel{background:var(--hl);color:#17254d}
+.opt .ok{color:var(--good);font-weight:700}
+.stage{position:relative;border:2px solid var(--ink);border-radius:12px;overflow:hidden;background:var(--s1);
+  filter:saturate(var(--sat)) brightness(var(--bri));transition:filter .9s}
+body.calm .stage{filter:none;transition:none}
+.stage svg{display:block;width:100%;height:auto}
+.stage img{display:block;width:100%;max-height:67vh;height:auto;object-fit:contain;background:#f7f2e8}
+.stage.art-error img{display:none}
+.stage:has(img:not([hidden])) > svg{display:none}
+.stage:has(img){background:#f7f2e8;border-color:#17254d}
+main .stage + .card{position:relative;margin-top:-12px;z-index:1;border-top:4px solid #4f8f95;box-shadow:0 -4px 22px #17254d18}
+main .stage + .card .day{color:#4f8f95}
+@media(min-width:850px){.wrap{max-width:850px}.stage img{max-height:68vh;object-fit:contain}}
+.scrib{position:absolute;inset:0;pointer-events:none;opacity:var(--scr);transition:opacity .9s}
+body.calm .scrib{display:none}
+.f1{fill:var(--s1)}.f2{fill:var(--s2)}.f3{fill:var(--s3)}.f4{fill:var(--s4)}.f5{fill:var(--s5)}
+.ink{stroke:var(--ink);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.cp{fill:#ffe45c;stroke:#17254d;stroke-width:2}
+.c1{fill:#e07a5f;stroke:#17254d;stroke-width:2}.c2{fill:#9b8bd6;stroke:#17254d;stroke-width:2}
+.c3{fill:#5fb4a2;stroke:#17254d;stroke-width:2}.c4{fill:#f2a65a;stroke:#17254d;stroke-width:2}
+.c5{fill:#7fa8e0;stroke:#17254d;stroke-width:2}.c6{fill:#c9b79c;stroke:#17254d;stroke-width:2}
+.lbl{font:700 11px var(--fb);fill:var(--ink);text-anchor:middle}
+.day{font-family:var(--fh);font-size:1.7rem;font-weight:700}
+.scene p+p{margin-top:8px}
+.note{background:var(--hl);color:#17254d;font-family:var(--fh);font-size:1.4em;line-height:1.2;padding:10px 14px;border-radius:2px;transform:rotate(-.5deg);box-shadow:2px 3px 0 rgba(0,0,0,.3)}
+.diary{font-family:var(--fh);font-size:1.55em;line-height:1.9em;padding:2px 12px;
+  background:repeating-linear-gradient(transparent,transparent calc(1.9em - 1px),var(--line) calc(1.9em - 1px),var(--line) 1.9em)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:2px solid var(--ink);border-radius:999px;padding:2px 12px;font-size:.9em;background:var(--card)}
+.chip b{font-weight:700}
+.bag{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}
+.bag .item{border:2px solid var(--ink);border-radius:10px;padding:10px 12px;background:var(--card)}
+.bag .item.locked{border-style:dashed;border-color:var(--line);color:var(--ink2)}
+.bag h3{font-size:1.05em;margin-bottom:2px}
+.mini{position:relative;min-height:260px;display:flex;flex-direction:column;gap:10px}
+.toast{position:absolute;max-width:76%;text-align:left;background:var(--card);border:2px solid var(--ink);border-radius:12px;padding:8px 12px;cursor:pointer;box-shadow:3px 3px 0 var(--ink);animation:pop .35s ease-out}
+.toast small{display:block;color:var(--ink2);font-weight:700}
+@keyframes pop{from{transform:translateY(-14px);opacity:0}to{transform:none;opacity:1}}
+body.calm .toast{animation:none}
+@media (prefers-reduced-motion:reduce){.toast{animation:none}.stage,.scrib{transition:none}}
+.steps{margin:0;padding-left:1.4em;display:flex;flex-direction:column;gap:6px}
+.q{border:2px solid var(--line);border-radius:10px;padding:12px;display:flex;flex-direction:column;gap:6px}
+.scale{display:flex;gap:8px;flex-wrap:wrap}
+.scale button{width:44px;height:44px;border:2px solid var(--ink);border-radius:50%;background:var(--card);cursor:pointer;font-weight:700}
+.scale button.sel,.scale button:hover{background:var(--hl);color:#17254d}
+.scale-choice{display:inline-flex;align-items:center;justify-content:center;gap:5px;min-width:48px;min-height:44px;border:2px solid var(--ink);border-radius:9px;background:var(--card);padding:4px 7px;cursor:pointer}
+.scale-choice:has(input:checked){background:var(--hl);color:#17254d}
+.scale-choice:focus-within{outline:3px solid var(--pen);outline-offset:2px}
+.modes{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.mode{border:2px solid var(--ink);border-radius:12px;background:var(--card);padding:14px;display:flex;flex-direction:column;gap:8px}
+.mode h3{font-family:var(--fh);font-size:1.9rem}
+.done{color:var(--good);font-weight:700}
+.ov{position:fixed;inset:0;background:rgba(8,12,30,.7);display:flex;align-items:center;justify-content:center;padding:16px;z-index:10}
+.ov .card{max-width:520px;width:100%;max-height:90vh;overflow:auto}
+textarea{width:100%;font:inherit;background:var(--card);color:var(--ink);border:2px solid var(--line);border-radius:8px;padding:8px;min-height:130px}
+input[type=text]{font:inherit;background:var(--card);color:var(--ink);border:2px solid var(--ink);border-radius:8px;padding:8px 10px;width:100%;max-width:260px}
+.small{font-size:.88em;color:var(--ink2)}
+.warn{border:2px dashed var(--ink);border-radius:10px;padding:10px 12px}
+table{border-collapse:collapse;width:100%}
+td,th{border:1px solid var(--line);padding:6px 8px;text-align:left;vertical-align:top}
+.scroll{overflow-x:auto}
+</style>
+</head><body>
+
+<div class="wrap" id="root"></div>
+
+<script>
+'use strict';
+/* ---------- utilidades ---------- */
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+let S;
+function freshState(){
+  return {name:'Noa', sleep:3, mood:3, focus:3, bonds:2, flags:{}, queue:[], mode:0, curId:null,
+          bag:{}, log:{1:[],2:[],3:[]}, done:{1:false,2:false,3:false}, W:null,
+          pre:null, post:null, size:1, calm:false, answered:false, paused:null};
+}
+S = freshState();
+function fmt(s){ return esc(s).replace(/\{n\}/g, esc(S.name)).replace(/==(.+?)==/g, '<mark>$1</mark>'); }
+const clamp = v => Math.max(0, Math.min(4, v));
+function applyFx(fx){ if(!fx) return; for (const k of ['sleep','mood','focus','bonds']) if (fx[k]) S[k] = clamp(S[k] + fx[k]); }
+function setVisual(){
+  const root = document.documentElement.style;
+  if (S.mode === 1){
+    root.setProperty('--sat', (0.42 + 0.145 * S.mood).toFixed(2));
+    root.setProperty('--bri', (0.8 + 0.05 * S.sleep).toFixed(2));
+    root.setProperty('--scr', ((4 - S.mood) * 0.16).toFixed(2));
+  } else { root.setProperty('--sat', 1); root.setProperty('--bri', 1); root.setProperty('--scr', 0); }
+}
+
+/* ---------- escenarios ilustrados ---------- */
+const FIG = {p:['cp','{n}'], i:['c1','Iker'], c:['c2','Cris'], m:['c3','Mar'], t:['c4','Elena'], o:['c5','Samuel'], h:['c6','Hugo']};
+function fig(x, who, y){
+  const f = FIG[who]; y = y || 190;
+  return `<g><rect class="${f[0]}" x="${x-13}" y="${y-52}" width="26" height="52" rx="11"/><circle class="${f[0]}" cx="${x}" cy="${y-64}" r="13"/>
+  <text class="lbl" x="${x}" y="${y-84}">${esc(f[1].replace('{n}', S.name))}</text></g>`;
+}
+const BACK = {
+  patio: `<rect class="f1" width="640" height="130"/><path class="f5" d="M0 130 L130 70 L220 130Z"/><path class="f5" d="M180 130 L330 90 L420 130Z"/>
+    <rect class="f2" y="130" width="640" height="90"/><rect class="f3" x="560" y="60" width="7" height="130"/><rect class="f4" x="535" y="52" width="46" height="30" rx="3"/>
+    <rect class="f3" x="90" y="168" width="130" height="8" rx="3"/><rect class="f3" x="100" y="176" width="6" height="14"/><rect class="f3" x="204" y="176" width="6" height="14"/>`,
+  aula: `<rect class="f1" width="640" height="220"/><rect class="f3" x="170" y="26" width="300" height="82" rx="5"/><path class="ink" d="M190 50h120M190 70h170"/>
+    <rect class="f2" y="150" width="640" height="70"/><rect class="f4" x="40" y="128" width="130" height="10" rx="3"/><rect class="f4" x="255" y="128" width="130" height="10" rx="3"/><rect class="f4" x="470" y="128" width="130" height="10" rx="3"/>
+    <rect class="f5" x="20" y="24" width="90" height="70" rx="4"/><path class="ink" d="M65 24v70M20 59h90"/>`,
+  guagua: `<rect class="f3" width="640" height="220"/><rect class="f1" x="30" y="30" width="270" height="100" rx="8"/><rect class="f1" x="340" y="30" width="270" height="100" rx="8"/>
+    <path class="f5" d="M30 130 L110 70 L170 130Z"/><path class="f5" d="M340 130 L430 60 L520 130Z"/><rect class="f2" x="30" y="112" width="270" height="18"/><rect class="f2" x="340" y="112" width="270" height="18"/>
+    <rect class="f4" x="30" y="150" width="270" height="70" rx="8"/><rect class="f4" x="340" y="150" width="270" height="70" rx="8"/>`,
+  casa: `<rect width="640" height="220" fill="#1c2a58"/><rect y="160" width="640" height="60" fill="#111a3a"/><rect x="40" y="120" width="210" height="60" rx="8" fill="#2f4180"/>
+    <rect x="40" y="108" width="50" height="30" rx="8" fill="#3b4e96"/><circle cx="520" cy="110" r="70" fill="#ffe45c" opacity=".16"/><rect x="498" y="82" width="44" height="76" rx="7" fill="#ffe45c" opacity=".9"/>
+    <rect x="504" y="90" width="32" height="56" rx="3" fill="#1c2a58"/><circle cx="560" cy="34" r="12" fill="#ffe45c" opacity=".75"/>`,
+  pasillo: `<rect class="f1" width="640" height="220"/><rect class="f2" y="165" width="640" height="55"/>
+    ${[40,120,200,280,360,440,520].map(x=>`<rect class="f4" x="${x}" y="30" width="70" height="135" rx="3"/><path class="ink" d="M${x+10} 60h50M${x+10} 66h50"/>`).join('')}`,
+  tutoria: `<rect class="f1" width="640" height="220"/><rect class="f2" y="160" width="640" height="60"/><rect class="f5" x="440" y="26" width="150" height="90" rx="5"/><path class="ink" d="M515 26v90M440 71h150"/>
+    <rect class="f3" x="150" y="128" width="130" height="10" rx="3"/><rect class="f3" x="160" y="138" width="7" height="30"/><rect class="f3" x="262" y="138" width="7" height="30"/>`,
+  circulo: `<rect class="f1" width="640" height="220"/><ellipse class="f2" cx="320" cy="165" rx="270" ry="45"/>
+    ${[110,215,320,425,530].map(x=>`<rect class="f3" x="${x-20}" y="${x===320?172:150}" width="40" height="8" rx="3"/>`).join('')}`
+};
+const SCRIB = `<svg viewBox="0 0 640 220" preserveAspectRatio="none" aria-hidden="true"><path d="M10 20 C60 5 90 40 140 12 S230 35 280 10" fill="none" stroke="#17254d" stroke-width="3" opacity=".55"/>
+  <path d="M360 205 C410 185 450 215 500 195 S590 210 632 190" fill="none" stroke="#17254d" stroke-width="3" opacity=".55"/><path d="M590 20 L630 60 M600 60 L630 28" stroke="#17254d" stroke-width="3" opacity=".5"/></svg>`;
+// Escenas canónicas de la biblia visual. Los demás estados conservan el SVG de v1.1.
+const ART = {
+  m1_intro:'s1_00',m1_lun_patio:'s1_01',m1_lun_aula:'s1_02',m1_lun_noche:'s1_03',
+  sum_lun:'s1_04',m1_mar_guagua:'s1_05',m1_mar_mates:'s2_00',m1_mar_recreo:'s2_01',
+  m1_mar_noche:'s2_02',sum_mar:'s2_03',m1_mie_manana:'s2_04',m1_mie_ia:'s2_05',
+  sum_mie:'s3_00',m1_jue_decide:'s3_01',m1_jue_elena:'s3_02',m1_jue_samuel:'s3_02',
+  m1_jue_900:'s3_03',m1_jue_espera:'s3_03',m1_proto:'s3_04',sum_jue:'s3_05',
+  m1_vie:'s3_06',m1_end:'s3_07',
+  m2_intro:'m2_00',m2_lun:'m2_01',m2_mar:'m2_02',m2_mie:'m2_03',
+  m2_jue:'m2_04',m2_vie:'m2_05',m2_end:'m2_07',
+  m3_intro:'m3_00',m3_normas:'m3_01',m3_escucha:'m3_02',
+  m3_iker:'m3_04',m3_compromisos:'m3_05',m3_end:'m3_05'
+};
+function stage(place, who){
+  const art = ART[S.curId];
+  const xs = {1:[320],2:[260,380],3:[200,320,440],4:[150,260,380,490]}[who.length] || [320];
+  const fallback = `<svg viewBox="0 0 640 220" aria-hidden="true">${BACK[place] || ''}${who.map((w,i)=>fig(xs[i], w)).join('')}</svg>`;
+  if (art) return `<div class="stage" role="img" aria-label="Viñeta de ${esc(SC[S.curId]?.day || place)}"><img src="assets/${art}.jpg" alt="" loading="eager" decoding="async" onerror="this.hidden=true">${fallback}</div>`;
+  return `<div class="stage" role="img" aria-label="Ilustración de la escena: ${esc(place)}">${fallback}<div class="scrib">${S.mode===1?SCRIB:''}</div></div>`;
+}
+
+/* ---------- mochila de recursos ---------- */
+const BAG = {
+  tutora:  ['Tu tutor o tutora', 'Cualquier miembro de la comunidad educativa que conozca un indicio de acoso debe comunicarlo al tutor o al equipo directivo, que valora las medidas de urgencia.'],
+  orienta: ['Orientación del centro', 'Acompaña al alumnado y a las familias y participa en la valoración del caso y en el plan de actuación.'],
+  cbp:     ['Coordinador o coordinadora de bienestar y protección', 'Figura que la LOPIVI exige en los centros con menores. Si tu centro la tiene, puede ayudarte; si no sabes quién es, pregunta en dirección.'],
+  familia: ['Tu familia', 'Puede hablar con el centro. Contarlo no te hace «chivato»: ellos no tienen que arreglarlo solos, pero sí pueden pedir que el centro actúe.'],
+  l900:    ['Teléfono 900 018 018', 'Gratuito, confidencial y anónimo, 24 horas. Lo atienden psicólogos con trabajadores sociales y abogados. Pueden llamar alumnos, familias, docentes y cualquier persona que sepa de un caso.'],
+  pruebas: ['Guardar pruebas', 'Haz una captura con fecha, no la reenvíes y enséñasela a una persona adulta. Sirve para que el centro valore lo que pasa.'],
+  amigo:   ['Una amistad de confianza', 'Hablar con alguien de tu edad alivia. Ayuda más si esa persona también te acompaña a contárselo a un adulto.']
+};
+function unlock(k){ if (k && !S.bag[k]) S.bag[k] = true; }
+
+/* ---------- guion ---------- */
+const NOTE_BYSTANDERS = '';
+const SC = {};
+function def(id, o){ o.id = id; SC[id] = o; }
+
+/* MODO 1: SU SEMANA */
+def('m1_intro', {place:'aula', who:['p'], day:'Antes de empezar',
+  paras:S=>['Eres =={n}==. Es octubre y llevas un mes en 1.º de ESO. Vienes de otro colegio y todavía te estás haciendo al instituto.',
+            'Esta es tu semana, de lunes a viernes. No hay una única forma de vivirla: tus decisiones cambian lo que pasa. Nada de lo que elijas es «culpa tuya».'],
+  choices:S=>[{t:'Empezar el lunes'}]});
+def('m1_lun_patio', {place:'patio', who:['p','i','c'], day:'Lunes',
+  paras:S=>['Recreo. Te acercas al grupo de tu clase junto a la cancha. Llevas una mochila enorme porque cargas los libros de todo el día.',
+            'Iker te mira y dice para que lo oigan todos: «Ya viene ==Tortuga==, con la casa a cuestas». Cris se ríe. Dos o tres más se ríen sin ganas.'],
+  choices:S=>[
+    {t:'Te ríes también, como si no te importara.', fx:{mood:-1}, flag:'rio', note:'Reír es una forma de protegerte, pero el mote duele igual. Y a quien mira le parece que estás de acuerdo.'},
+    {t:'Dices en voz alta: «No me hace gracia».', flag:'limite', note:'Poner un límite es válido. Que no funcione al momento no significa que lo hicieras mal.'},
+    {t:'Te vas hacia la fuente y esperas a que suene el timbre.', fx:{mood:-1}, flag:'evita', note:'Alejarte te cuida un rato, pero a solas todo pesa más.'}]});
+def('m1_lun_aula', {place:'aula', who:['p','m','i'], day:'Lunes',
+  paras:S=>['Lengua. La profesora, Elena, pide grupos de cuatro para un trabajo. Todos se juntan rápido. Tú te quedas de pie con tu cuaderno.',
+            'Iker dice flojito: «Que se vaya con los de la otra clase». Hay dos risitas. Mar, que se sienta detrás de ti, mira su mesa.'],
+  choices:S=>[
+    {t:'Le preguntas a Mar si puedes ir con su grupo.', fx:{bonds:1}, flag:'pidioMar', note:'Pedir un hueco concreto a una persona es un buen primer paso. Mar duda, pero dice que sí.'},
+    {t:'Esperas sin decir nada a que Elena te asigne un grupo.', fx:{mood:-1,focus:-1}, note:'Elena te coloca con el grupo de Iker. Pasas la hora sin hablar. Esperar a que otros decidan suele dejarte fuera.'},
+    {t:'Al terminar la clase, le dices a Elena que te están dejando fuera.', fx:{mood:1}, bag:'tutora', flag:'avisoPronto', note:'Elena te escucha: «Gracias por decírmelo. Voy a estar atenta. Si vuelve a pasar, cuéntamelo». Avisar pronto es una buena opción.'}]});
+def('m1_lun_noche', {place:'casa', who:['p'], day:'Lunes por la noche',
+  paras:S=>['Casa. Subes a tu cuarto. El móvil vibra: el grupo de clase, 1.ºB, tiene 43 mensajes nuevos.',
+            'Alguien ha subido una foto tuya en la guagua con una tortuga dibujada encima. Debajo hay «jajaja». Hugo, tu amigo del colegio anterior, te escribe aparte: «¿Estás bien? He visto lo del grupo».'],
+  choices:S=>[
+    {t:'Respondes en el grupo con un insulto.', fx:{mood:-1,sleep:-1,bonds:-1}, flag:'respondio', note:'Responder en caliente suele alimentar el chat y puede volverse en tu contra.'},
+    {t:'Haces una captura, sin responder, y la guardas.', fx:{sleep:-1}, bag:'pruebas', flag:'pruebas', note:'Guardar pruebas es lo que el alumnado considera más útil frente al ciberacoso (63,5 % en el informe ANAR 2025-26).'},
+    {t:'Le cuentas a Hugo cómo te sientes.', fx:{mood:1,bonds:1,sleep:-1}, bag:'amigo', note:'Contárselo a alguien alivia. Hugo te dice que lo hables con un adulto del instituto.'},
+    {t:'Silencias el grupo y apagas el móvil.', fx:{sleep:1}, note:'Silenciar descansa, pero no cambia lo ocurrido. Si puedes, guarda la captura antes de borrar.'}]});
+def('sum_lun', {type:'sum', day:'Lunes'});
+def('m1_mar_guagua', {place:'guagua', who:['p','i','c'], day:'Martes',
+  paras:S=>['Duermes poco. En la guagua, Iker te quita la gorra y se la pasa a Cris por encima de tu cabeza. El resto mira por la ventana.'],
+  choices:S=>[
+    {t:'Pides la gorra con calma y te sientas delante, cerca del conductor.', note:'Estar cerca de un adulto en el transporte es una buena estrategia.'},
+    {t:'Te levantas a quitársela y se arma un forcejeo.', fx:{mood:-1}, note:'Responder con el cuerpo suele escalar y puede acabar castigándote a ti.'},
+    {t:'Te quedas mirando el suelo hasta bajar.', fx:{mood:-1}, note:'Es una reacción normal cuando no sabes qué hacer. No quiere decir que seas débil.'}]});
+def('m1_mar_mates', {type:'mini', day:'Martes'});
+def('m1_mar_recreo', {place:'patio', who:['p','m'], day:'Martes',
+  paras:S=>{
+    const base = ['Recreo. Comes el bocadillo en un banco.'];
+    if (S.W && S.W.acompano) base.push('Mar viene hacia ti: «Eso del lunes estuvo mal. ¿Me siento?». Es la primera vez que alguien de clase te dice algo así.');
+    else base.push('Mar pasa con una amiga, te mira y duda un segundo. Parece que iba a decirte algo, pero sigue su camino.');
+    return base; },
+  choices:S=>{
+    if (S.W && S.W.acompano) return [
+      {t:'Dices que sí y charláis un rato.', fx:{mood:1,bonds:1}, note:'Un gesto pequeño de una sola persona cambia el recreo entero.'},
+      {t:'Dices que prefieres estar solo un rato.', note:'Está bien querer espacio. Mar entiende y te dice que está cerca si cambias de idea.'}];
+    return [
+      {t:'Le haces un gesto para que se siente.', fx:{bonds:1}, note:'Dar el primer paso con una sola persona es más fácil que con un grupo.'},
+      {t:'Prefieres quedarte a solas.', note:'A veces cuesta. Si puedes, vuelve a intentarlo otro día.'}]; }});
+def('m1_mar_noche', {place:'casa', who:['p'], day:'Martes por la noche',
+  paras:S=>{
+    const p = ['Cena. Alguien de tu familia te pregunta cómo ha ido el día. Notas que ya casi no tienes hambre.'];
+    if (S.W && S.W.reenvio) p.push('Antes de subir, ves que el montaje de la tortuga lo han reenviado a otros grupos. Lo ha visto más gente.');
+    if (S.W && S.W.guardoPruebas) p.push('Te llega un mensaje de Mar: «Siento lo del grupo. He guardado una captura y se la he enseñado a Elena».');
+    return p; },
+  choices:S=>[
+    {t:'Le cuentas lo que está pasando.', fx:{mood:1,bonds:1}, bag:'familia', flag:'familia', note:'Tu familia te dice: «Gracias por contármelo. No es culpa tuya. Mañana hablamos con tu tutora».'},
+    {t:'Se lo cuentas, pero le pides que no haga nada.', bag:'familia', flag:'familia', note:'«Te entiendo, pero no puedo prometerte eso. Esto es serio y no tienes que cargar tú solo con ello». Muchos alumnos temen que contarlo empeore las cosas: el 27,7 % lo piensa en el informe ANAR.'},
+    {t:'Dices «bien» y subes a tu cuarto.', fx:{mood:-1,sleep:-1}, note:'Callar es comprensible. El peso sigue ahí, y duermes peor.'}]});
+def('sum_mar', {type:'sum', day:'Martes'});
+def('m1_mie_manana', {place:'casa', who:['p'], day:'Miércoles',
+  paras:S=>['Te duele la barriga desde que te despiertas. No es mentira: es el nudo de ir al instituto.'],
+  choices:S=>{
+    if (S.flags.familia) return [
+      {t:'Vas a clase y tu familia escribe a tu tutora.', fx:{mood:1}, flag:'familiaAviso', bag:'tutora', note:'Que la familia hable con el centro es una vía clara. Elena contesta que hoy mismo lo habla con dirección.'},
+      {t:'Te quedas en casa hoy.', fx:{focus:-1}, note:'Faltar alivia un día, pero el problema se acumula y vuelves con más miedo.'}];
+    return [
+      {t:'Vas a clase aunque te cueste.', fx:{mood:-1}, note:'Ir tiene mérito. Si no se lo cuentas a nadie, vas sin apoyo.'},
+      {t:'Dices que estás enfermo y te quedas en casa.', fx:{focus:-1}, note:'Faltar alivia un día, pero el problema sigue.'},
+      {t:'Se lo cuentas a tu familia ahora.', fx:{mood:1,bonds:1}, bag:'familia', flag:'familia', flag2:'familiaAviso', note:'Tu familia te escucha. Avisan hoy a tu tutora.'}]; }});
+def('m1_mie_ia', {place:'patio', who:['p','c'], day:'Miércoles',
+  paras:S=>['Recreo. Cris te enseña su móvil entre risas: es un vídeo corto con tu cara pegada a un baile ridículo. Está hecho con inteligencia artificial. Ya lo han visto varios.'],
+  choices:S=>[
+    {t:'Lo guardas como prueba y decides contárselo a un adulto hoy.', fx:{bonds:0}, bag:'pruebas', flag:'pruebas', note:'En el informe ANAR 2025-26 la IA se usó en el 23,5 % de los casos de ciberbullying. Guardar la prueba y avisar es lo más útil.'},
+    {t:'Intentas quitarle el móvil a Cris.', fx:{mood:-1}, note:'Una profesora de guardia os separa. El forcejeo complica la situación y puede volverse contra ti.'},
+    {t:'Te vas al baño y lloras.', fx:{mood:-1}, note:'Respirar a solas un rato está bien. Lo difícil es quedarte solo con esto mucho tiempo.'}]});
+def('sum_mie', {type:'sum', day:'Miércoles'});
+def('m1_jue_decide', {place:'pasillo', who:['p'], day:'Jueves',
+  paras:S=>{
+    const p = ['Pasillo, antes de la primera clase. Hoy decides si seguir aguantando o pedir ayuda. Hay varias puertas, y no tienes que usar solo una.'];
+    if (S.W && S.W.avisoCentro) p.push('Elena te ha visto y se acerca: ya sabe parte de lo que ocurre, porque alguien se lo contó. «Quiero saber cómo estás tú».');
+    return p; },
+  choices:S=>[
+    {t:'Hablar con Elena, tu tutora.', goto:['m1_jue_elena','m1_proto'], bag:'tutora', fx:{mood:1}},
+    {t:'Ir a orientación a hablar con Samuel.', goto:['m1_jue_samuel','m1_proto'], bag:'orienta', fx:{mood:1}},
+    {t:'Llamar esta tarde al 900 018 018, sin dar tu nombre si no quieres.', goto:['m1_jue_900','m1_proto'], bag:'l900', fx:{mood:1}},
+    {t:'Esperar un día más.', goto:['m1_jue_espera'], fx:{mood:-1,sleep:-1}}]});
+def('m1_jue_elena', {place:'tutoria', who:['p','t'], day:'Jueves',
+  paras:S=>['Elena cierra la puerta. Te escucha sin interrumpir.',
+            '«Gracias por contármelo. Lo que me cuentas es importante y no es culpa tuya. Voy a avisar a dirección y a orientación, porque el instituto tiene un protocolo para esto. Te explico qué va a pasar».'],
+  choices:S=>[{t:'Seguir'}]});
+def('m1_jue_samuel', {place:'tutoria', who:['p','o'], day:'Jueves',
+  paras:S=>['Samuel, el orientador, te recibe sin prisa. Te deja hablar a tu ritmo.',
+            '«Has hecho bien en venir. Vamos a hablar con Elena y con dirección juntos. No lo vas a llevar tú solo. Te cuento cómo funciona».'],
+  choices:S=>[{t:'Seguir'}]});
+def('m1_jue_900', {place:'casa', who:['p'], day:'Jueves por la tarde',
+  paras:S=>['Llamas al 900 018 018. Es gratuito y no aparece en la factura. Al otro lado, una persona te escucha sin juzgarte.',
+            '«Gracias por llamar. Cuéntame a tu ritmo. Si quieres, podemos ayudarte a que lo sepa alguien de tu centro». Decides hablar con Elena mañana a primera hora.'],
+  choices:S=>[{t:'Seguir', goto:[]}]});
+def('m1_jue_espera', {place:'casa', who:['p'], day:'Jueves',
+  paras:S=>['Decides esperar un día más. Pasas el jueves esquivando el pasillo. Por la noche casi no duermes.'],
+  choices:S=>[{t:'Seguir', flag:'espero', note:'Esperar es humano. Pero cada día extra es un día más con esto encima. Pedir ayuda no tiene fecha de caducidad.'}]});
+def('m1_proto', {type:'info', day:'Qué pasa después de pedir ayuda'});
+def('sum_jue', {type:'sum', day:'Jueves'});
+def('m1_vie', {place:'aula', who:['p','t'], day:'Viernes',
+  paras:S=>{
+    const p = [];
+    if (S.flags.espero){
+      p.push('Elena te llama aparte antes de clase. Ha notado que algo pasa: llevas días distinto. «No hace falta que aguantes más. Estoy aquí».');
+      p.push('Por fin se lo cuentas. Elena te explica qué va a pasar.');
+    } else {
+      p.push('Viernes. El centro ha cambiado cosas pequeñas: te han movido de sitio en clase, hay una profesora cerca en el recreo y Elena ha hablado con tu familia.');
+      p.push('Iker no te ha dicho nada hoy, aunque su grupo te mira. No es mágico ni rápido: el centro está valorando lo ocurrido y hablando con las personas implicadas.');
+    }
+    return p; },
+  choices:S=>[S.flags.espero && !S.flags.protoVisto ? {t:'Escuchar qué va a pasar', goto:['m1_proto']} : {t:'Terminar la semana'}]});
+def('m1_end', {type:'end', mode:1});
+
+/* MODO 2: DESDE LA CLASE */
+def('m2_intro', {place:'aula', who:['m','p'], day:'Antes de empezar',
+  paras:S=>['Eres ==Mar==. Vas a la clase de {n}. No lideras nada y tampoco eres el blanco: eres una de las personas que ven lo que pasa.',
+            'Casi todo el mundo en clase ve algo. Lo que cada persona hace con eso cambia mucho cómo vive la semana quien lo sufre.'],
+  choices:S=>[{t:'Empezar el lunes'}]});
+def('m2_lun', {place:'patio', who:['m','i','p'], day:'Lunes',
+  paras:S=>['Recreo. Oyes a Iker: «Ya viene Tortuga». {n} se queda parado. Tus amigas se ríen. Una te mira, esperando que te rías también.'],
+  choices:S=>[
+    {t:'Te ríes un poco para no desentonar.', flag:'rio', fxN:'Se siente más solo: parece que todos están de acuerdo.', note:'Una risa pequeña pesa mucho en quien es el blanco. Parece que todos están de acuerdo.'},
+    {t:'No dices nada, pero no te ríes.', flag:'callo', fxN:'Nota que alguien no se ríe, aunque nadie dice nada.', note:'No sumarte importa. Pero a quien lo sufre le llega sobre todo el silencio.'},
+    {t:'Después del recreo te acercas a {n}: «Eso estuvo mal».', flag:'acompano', fxN:'Esa frase suya le alivia la tarde.', note:'Un gesto pequeño, en privado y sin montar escena, puede cambiar mucho.'}]});
+def('m2_mar', {place:'casa', who:['m'], day:'Martes, 22:40',
+  paras:S=>['En el grupo de clase, la foto de {n} con una tortuga dibujada encima. Cuatro «jajaja». Tu dedo está sobre el mensaje.'],
+  choices:S=>[
+    {t:'Lo reenvías a una amiga para que lo vea.', flag:'reenvio', fxN:'El montaje llega a otros grupos. Lo ve más gente.', note:'Reenviar es participar: cada reenvío es otra persona que lo ve. En el informe ANAR, 3 de cada 10 alumnos no lo consideran complicidad, pero lo es.'},
+    {t:'Das «me gusta» y sigues.', flag:'like', fxN:'Ve que alguien más aprueba el mensaje.', note:'Un «me gusta» le dice al que hace el montaje que va bien.'},
+    {t:'No reaccionas ni reenvías.', flag:'callo2', fxN:'Sigue solo, pero el montaje no se amplía por ti.', note:'No ampliarlo ayuda. Pero ver y callar también deja solo a {n}.'},
+    {t:'Haces una captura, no la reenvías y se la enseñas mañana a Elena.', flags:['guardoPruebas','avisoCentro'], fxN:'Sin saberlo, tiene ya a una persona adulta informada.', note:'Guardar la prueba y avisar a un adulto es lo que el alumnado considera más útil (63,5 % las capturas, informe ANAR 2025-26).'}]});
+def('m2_mie', {place:'aula', who:['m','i','c'], day:'Miércoles',
+  paras:S=>['En clase, Iker vuelve a burlarse de {n}: «Se ha escondido en su caparazón». Risas. Tus amigas te miran.'],
+  choices:S=>[
+    {t:'Sumas otra broma.', flag:'broma', fxN:'Al volver, ve que más gente ha entrado en la broma.', note:'Cuando se suma más gente, el acoso se vuelve más grupal. En ANAR, en 1 de cada 3 casos participan dos o más personas.'},
+    {t:'Dices: «Dejadlo ya, no mola».', flag:'defiende', fxN:'Se entera de que alguien lo defendió.', note:'Decirlo da fuerza a otros: suele haber más personas incómodas de las que parece. Hazlo solo si te sientes a salvo; si no, avisa a un adulto.'},
+    {t:'Le escribes por privado: «Estoy aquí si quieres hablar».', flag:'acompano', fxN:'Ese mensaje lo lee dos veces.', note:'Escribir en privado es un gesto seguro y muy valioso.'},
+    {t:'Cambias de tema y miras el móvil.', flag:'callo3', fxN:'No nota que nadie lo defienda.', note:'Es lo más fácil y lo que hace casi todo el mundo. Pero deja la situación tal cual.'}]});
+def('m2_jue', {place:'pasillo', who:['m','i'], day:'Jueves',
+  paras:S=>['Ves a {n} en el pasillo cerca de tutoría. Iker te susurra: «¿Qué habrá contado? Si pasa algo, sabremos quién ha sido».'],
+  choices:S=>[
+    {t:'Después, le dices a Elena lo que has visto.', flag:'avisoCentro', fxN:'El centro tiene más información para actuar con precisión.', note:'En los protocolos, todas las personas de la comunidad deben comunicar lo que saben. Aportar lo que viste ayuda a valorar el caso.'},
+    {t:'Te lo guardas: no es asunto tuyo.', flag:'callo4', fxN:'Tiene menos apoyo del que podría.', note:'Callar por miedo es normal, pero deja a {n} con menos apoyo.'},
+    {t:'Lo hablas con una amiga de confianza para decidir juntas qué hacer.', flag:'grupo', fxN:'Hay más gente pensando en ayudar.', note:'Sumar a otros reduce el miedo. Avisar a un adulto sigue siendo el paso clave.'},
+    {t:'Llamas al 900 018 018 de forma anónima.', flag:'llamoAyuda', fxN:'Un adulto con formación recibe la información.', note:'Es gratuito, confidencial y anónimo, y también sirve para testigos.'}]});
+def('m2_vie', {place:'pasillo', who:['m','i'], day:'Viernes',
+  paras:S=>['Iker te para en el pasillo: «Aquí nadie dijo nada, ¿vale? Nadie se chiva».'],
+  choices:S=>[
+    {t:'Dices que sí por miedo.', flag:'miedo', note:'El miedo es real. Si recibes presiones, también se cuenta: el centro tiene que protegerte a ti también.'},
+    {t:'Le dices con calma que no vas a mentir si te preguntan.', flag:'firme', note:'Decir la verdad con calma es suficiente. No tienes que enfrentarte a nadie.'},
+    {t:'Te alejas y le cuentas a Elena que te están presionando.', flag:'avisoPresion', note:'Contar la presión es una buena decisión. Tú también mereces protección.'}]});
+def('m2_end', {type:'end', mode:2});
+
+/* MODO 3: REPARAR */
+def('m3_intro', {place:'circulo', who:['m','p','i','o'], day:'Dos semanas después',
+  paras:S=>['El centro ha seguido su protocolo y propone un ==círculo de reparación==, voluntario, con Samuel, el orientador, como facilitador.',
+            '{n} ha aceptado participar y puede retirarse en cualquier momento. Asistís tú (Mar), {n}, Iker y Samuel. Si {n} no quisiera participar, el centro tendría que continuar igualmente con las medidas de protección y seguimiento. Reparar no es olvidar ni obligar a nadie a ser amigo.'],
+  choices:S=>[{t:'Entrar al círculo'}]});
+def('m3_normas', {place:'circulo', who:['m','p','i','o'], day:'Normas del círculo',
+  paras:S=>['Samuel explica las normas: turno de palabra, escuchar sin interrumpir, hablar de lo que cada uno siente y no atacar a nadie. Pregunta: «¿Qué haría que {n} se sienta con seguridad?»'],
+  choices:S=>[
+    {t:'Que {n} pueda decir «pausa» y salir cuando quiera.', good:true, note:'Correcto. La seguridad de quien sufrió el daño va primero, y su participación es voluntaria.'},
+    {t:'Que {n} explique todo con detalle para que Iker lo entienda.', note:'Así carga {n} con el trabajo. Reparar es responsabilidad de quien causó el daño.'},
+    {t:'Que Iker pida perdón en voz alta ya.', note:'Un perdón forzado suele sonar vacío. Primero se escucha.'}]});
+def('m3_escucha', {place:'circulo', who:['m','p','i','o'], day:'Escucha',
+  paras:S=>['{n} lee lo que escribió: «Me sentía sin nadie en el recreo. Cuando vi el grupo, no quería volver al instituto».','Es tu turno. Samuel te pregunta cómo te sientes con lo ocurrido.'],
+  choices:S=>[
+    {t:'«No debí reírme ni dar me gusta. Lo siento».', good:true, note:'Asumir tu parte sin justificarte es la base de reparar.'},
+    {t:'«Yo no hice nada».', note:'No intervenir también tiene efecto. Escuchar sin defenderte es el primer paso.'},
+    {t:'«Es que todo el mundo lo hacía».', note:'Era cierto que era un hecho grupal, pero eso no quita tu parte.'}]});
+def('m3_iker', {place:'circulo', who:['m','p','i','o'], day:'Iker habla',
+  paras:S=>['Iker dice: «Era una broma».','Todos te miran un segundo.'],
+  choices:S=>[
+    {t:'«Para ti era una broma. Para {n}, no».', good:true, note:'Dices lo que pasó sin atacar. Es lo que mejor abre la conversación.'},
+    {t:'Te quedas callado para no liarla.', note:'Es comprensible. Samuel puede ayudar a volver sobre ello.'},
+    {t:'«Pues no tiene gracia, eres un idiota».', note:'Atacar bloquea el círculo. Se puede ser firme sin insultar.'}]});
+def('m3_compromisos', {type:'multi', day:'Compromisos',
+  paras:S=>['Para terminar, cada persona propone compromisos concretos. Elige ==dos== que te parezcan útiles.'],
+  options:[
+    ['Invitar a {n} a mi grupo en el recreo.', true],
+    ['No reenviar ni dar «me gusta» a lo que humille a alguien.', true],
+    ['Avisar a un adulto si vuelve a pasar.', true],
+    ['Pedirle a {n} que se le pase y no hable más del tema.', false],
+    ['Seguir en contacto estas semanas.', true]]});
+def('m3_end', {type:'end', mode:3});
+
+/* ---------- pruebas inicial / final ---------- */
+const QS = [
+  {q:'Durante tres semanas, un grupo se ríe casi cada día de un compañero y le pone motes. Eso es…', o:['Una broma entre compañeros','Un conflicto puntual','Posible acoso escolar: es repetido y hay desequilibrio','Algo que se arregla solo'], c:2},
+  {q:'Llega al grupo de clase un vídeo que humilla a alguien. Lo mejor es…', o:['Reenviarlo para que lo vea más gente','Dar «me gusta» si tiene gracia','Guardar una captura sin reenviarlo y contárselo a un adulto','Ignorarlo y no decir nada'], c:2},
+  {q:'Si quieres pedir ayuda sin decir tu nombre, puedes…', o:['Esperar a que se pase','Llamar al 900 018 018, gratuito y confidencial','Escribir en el grupo de clase','No existe esa posibilidad'], c:1},
+  {q:'Un compañero te cuenta que sufre acoso y te pide que no se lo digas a nadie. Lo mejor es…', o:['Prometer guardar el secreto','Explicarle que necesita ayuda de un adulto y acompañarle a contarlo','Decírselo a toda la clase para que lo apoyen','Decirle que aguante, que se le pasará'], c:1}
+];
+const SCALES = ['Si viera una situación de acoso, me siento capaz de hacer algo útil.', 'Si viera una situación de acoso, avisaría a una persona adulta.'];
+
+/* ---------- vistas ---------- */
+const root = $('#root');
+function header(){
+  return `<div class="top"><div class="brand">Ni uno <mark>menos</mark></div>
+  <div class="tools"><button class="sm" data-a="size-" aria-label="Texto más pequeño">A−</button><button class="sm" data-a="size+" aria-label="Texto más grande">A+</button>
+  <button class="sm" data-a="calm" aria-pressed="${S.calm}">${S.calm?'Efectos: apagados':'Efectos: activos'}</button>
+  ${S.mode?'<button class="sm" data-a="menu">Menú</button>':''}<button class="sm help" data-a="help">Necesito ayuda</button></div></div>`;
+}
+function show(html){ root.innerHTML = header() + `<main id="main" tabindex="-1">${html}</main>`; setVisual(); const m = $('#main'); m.style.display='flex'; m.style.flexDirection='column'; m.style.gap='14px'; m.focus({preventScroll:true}); window.scrollTo(0,0); }
+
+function viewIntro(){
+  S.mode = 0; setVisual();
+  show(`<div class="card"><div class="kicker">Piloto · Perfil A · 1.º y 2.º de ESO</div><div class="big">Ni uno <mark>menos</mark></div>
+  <p class="lead">Un juego para vivir el acoso escolar desde tres sitios: quien lo sufre, quien lo ve y quien ayuda a reparar. Se juega con tu docente, en dos sesiones.</p>
+  <div class="warn"><b>Aviso.</b> Este juego trata de burlas, exclusión y ciberacoso. Si en algún momento no te apetece seguir, pulsa «Menú» o «Necesito ayuda». Puedes parar sin dar explicaciones. No se guarda tu nombre ni tus respuestas fuera de esta pantalla.</div>
+  <label for="nm"><b>¿Cómo quieres llamar al personaje de «Su semana»?</b></label>
+  <input type="text" id="nm" maxlength="14" value="${esc(S.name)}" autocomplete="off">
+  <div class="row"><button class="btn" data-a="start">Empezar</button><button class="btn ghost" data-a="guide">Guía del docente</button></div></div>`);
+}
+function viewPre(kind){
+  const data = S[kind] || {};
+  const done = !!S[kind];
+  const title = kind==='pre' ? 'Test inicial' : 'Test final';
+  show(`<div class="card"><div class="kicker">${title} · anónimo · 3 minutos</div>
+  <p>No hay notas. Sirve para ver qué se aprende al jugar.</p>
+  ${QS.map((x,i)=>`<fieldset class="q" style="margin:0"><legend><b>${i+1}. ${esc(x.q)}</b></legend>${x.o.map((o,j)=>`<label class="opt" style="box-shadow:none;cursor:pointer;display:block"><input type="radio" name="q${i}" value="${j}"> ${esc(o)}</label>`).join('')}</fieldset>`).join('')}
+  ${SCALES.map((x,i)=>`<fieldset class="q"><legend><b>${QS.length+i+1}. ${esc(x)}</b></legend><div class="small">1 = nada de acuerdo · 5 = totalmente de acuerdo</div><div class="scale">${[1,2,3,4,5].map(n=>`<label class="scale-choice"><input type="radio" name="scale${i}" value="${n}"> ${n}</label>`).join('')}</div></fieldset>`).join('')}
+  <p class="small" id="testerr" role="alert" aria-live="polite"></p>
+  <div class="row"><button class="btn" data-a="sendtest" data-k="${kind}">Enviar</button><button class="btn ghost" data-a="menu">Saltar</button></div></div>`);
+}
+function submitTest(kind){
+  const ans = QS.map((x,i)=>{ const r = document.querySelector(`input[name=q${i}]:checked`); return r ? +r.value : -1; });
+  const sc = SCALES.map((_,i)=>{ const r = document.querySelector(`input[name=scale${i}]:checked`); return r ? +r.value : 0; });
+  if (ans.includes(-1) || sc.includes(0)){
+    $('#testerr').textContent = 'Responde las seis preguntas antes de enviar, o utiliza «Saltar» si no quieres realizar el test.';
+    const missing = [...QS.map((_,i)=>`q${i}`), ...SCALES.map((_,i)=>`scale${i}`)]
+      .find(name=>!document.querySelector(`input[name="${name}"]:checked`));
+    document.querySelector(`input[name="${missing}"]`)?.focus();
+    return;
+  }
+  const score = ans.reduce((a,v,i)=>a + (v===QS[i].c ? 1 : 0), 0);
+  S[kind] = {ans, score, sc};
+  viewMenu();
+}
+function viewMenu(){
+  S.mode = 0; setVisual();
+  const stat = k => S.done[k] ? '<span class="done">Jugado</span>' : 'Sin jugar';
+  show(`<div class="card"><div class="kicker">Menú · Sesiones sugeridas</div><h2 class="day">Elige un modo</h2>
+  <p class="small">Sesión 1: test inicial y «Su semana», con debate. Sesión 2: «Desde la clase», «Reparar» y test final. Lo que decidas en «Desde la clase» cambia «Su semana» si la vuelves a jugar.</p></div>
+  ${S.paused ? `<div class="card"><p><b>Partida en pausa:</b> ${['','Su semana','Desde la clase','Reparar'][S.paused.mode]}.</p><div class="row"><button class="btn" data-a="resume">Continuar partida</button><button class="btn ghost" data-a="discard">Descartar partida pausada</button></div></div>` : ''}
+  <div class="modes">
+    <div class="mode"><h3>Su semana</h3><p>Vive cinco días como ${esc(S.name)}, que acaba de llegar al instituto. Unos 20 minutos.</p><p class="small">${stat(1)}</p><button class="btn" data-a="mode" data-m="1">${S.paused?.mode===1?'Reiniciar este modo':S.done[1]?'Volver a jugar':'Jugar'}</button></div>
+    <div class="mode"><h3>Desde la clase</h3><p>Los mismos hechos vistos por Mar, que lo presencia. Unos 15 minutos.</p><p class="small">${stat(2)}</p><button class="btn" data-a="mode" data-m="2">${S.paused?.mode===2?'Reiniciar este modo':S.done[2]?'Volver a jugar':'Jugar'}</button></div>
+    <div class="mode"><h3>Reparar</h3><p>Un círculo de reparación guiado por orientación. Unos 10 minutos.</p><p class="small">${stat(3)}</p><button class="btn" data-a="mode" data-m="3">${S.paused?.mode===3?'Reiniciar este modo':S.done[3]?'Volver a jugar':'Jugar'}</button></div>
+  </div>
+  <div class="card flat"><div class="row"><button class="btn ghost" data-a="test" data-k="pre">${S.pre?'Test inicial (hecho)':'Test inicial'}</button><button class="btn ghost" data-a="test" data-k="post">${S.post?'Test final (hecho)':'Test final'}</button>
+  <button class="btn ghost" data-a="bag">Mochila de apoyo</button><button class="btn ghost" data-a="guide">Guía del docente</button><button class="btn ghost" data-a="summary">Resumen de sesión</button></div></div>`);
+}
+function viewBag(){
+  show(`<div class="card"><div class="kicker">Mochila de apoyo</div><h2 class="day">Recursos que has descubierto</h2>
+  <p class="small">Los recursos se desbloquean al usarlos en el juego. Los nombres y pasos del protocolo de tu centro se confirmarán con la normativa de Canarias.</p>
+  <div class="bag">${Object.keys(BAG).map(k=>S.bag[k]?`<div class="item"><h3>${esc(BAG[k][0])}</h3><p>${esc(BAG[k][1])}</p></div>`:`<div class="item locked"><h3>Aún por descubrir</h3><p class="small">Se desbloquea al usarlo en el juego.</p></div>`).join('')}</div>
+  <button class="btn" data-a="menu">Volver al menú</button></div>`);
+}
+function viewHelp(){
+  if ($('#ov')) return;
+  const previousFocus = document.activeElement;
+  const d = document.createElement('div'); d.className='ov'; d.setAttribute('role','dialog'); d.setAttribute('aria-modal','true'); d.setAttribute('aria-label','Necesito ayuda'); d.id='ov';
+  d.innerHTML = `<div class="card"><h2 class="day">Necesito hablar con alguien</h2>
+  <p><b>Teléfono 900 018 018</b>: gratuito, confidencial y anónimo, las 24 horas. Lo atienden psicólogos con trabajadores sociales y abogados. Puedes llamar tú, tu familia o cualquier persona que sepa de un caso de acoso.</p>
+  <p>También puedes hablar con tu <b>tutor o tutora</b>, con <b>orientación</b> o con <b>una persona adulta de confianza</b> ahora mismo.</p>
+  <p>Si estás en peligro o necesitas ayuda urgente: <b>112</b>.</p>
+  <p class="small">Pausar el juego no pasa nada. Puedes volver cuando quieras.</p>
+  <div class="row"><button class="btn" data-a="closehelp">Cerrar</button><button class="btn ghost" data-a="menu">Ir al menú</button></div></div>`;
+  d._returnFocus = previousFocus;
+  document.body.appendChild(d); d.querySelector('button').focus();
+}
+function closeHelp(){
+  const d = $('#ov'); if (!d) return;
+  const previous = d._returnFocus;
+  d.remove();
+  if (previous?.isConnected) previous.focus();
+}
+function pauseToMenu(){
+  if (S.mode >= 1 && S.mode <= 3 && !S.done[S.mode]) S.paused = {mode:S.mode, html:root.innerHTML};
+  closeHelp();
+  viewMenu();
+}
+function resumeMode(){
+  if (!S.paused) return;
+  const saved = S.paused;
+  S.paused = null;
+  S.mode = saved.mode;
+  root.innerHTML = saved.html;
+  setVisual();
+  $('#main')?.focus({preventScroll:true});
+  window.scrollTo(0,0);
+}
+function viewGuide(){
+  show(`<div class="card"><div class="kicker">Guía del docente · Perfil A (1.º y 2.º de ESO)</div><h2 class="day">Cómo usar el piloto</h2>
+  <p><b>Objetivos.</b> (1) Reconocer el acoso y distinguirlo de un conflicto puntual. (2) Comprender sus efectos. (3) Saber a quién acudir y qué ocurre después. (4) Elegir conductas de testigo que ayudan. (5) Entender la reparación como proceso con apoyo adulto. El juego no promete reducir el acoso: busca mejorar conocimientos, empatía y disposición a actuar.</p>
+  <p><b>Dos sesiones de 45 minutos.</b> Sesión 1: test inicial (5 min), «Su semana» (20), debate (15). Sesión 2: «Desde la clase» (15), «Reparar» (10), debate (10) y test final (5). Mejor jugar en parejas o individualmente con debate colectivo posterior.</p>
+  <p><b>Preguntas para el debate.</b></p>
+  <ol class="steps"><li>¿Qué cambia en un día cuando alguien te ridiculiza? ¿Qué cosas dejas de hacer?</li><li>¿Qué diferencia hay entre una broma y acoso? ¿Quién decide que es broma?</li><li>¿Qué opciones habéis visto para pedir ayuda? ¿Cuál os costaría menos y por qué?</li><li>¿Qué cuesta más: no reírse, reenviar o avisar? ¿Cómo hacerlo más fácil?</li><li>¿Qué significa reparar? ¿Qué no es reparar?</li></ol>
+  <p><b>Si un alumno cuenta una situación real.</b> Escucha sin juzgar, no prometas confidencialidad absoluta y activa el protocolo del centro avisando a dirección, orientación y, si existe, al coordinador de bienestar. El teléfono 900 018 018 también atiende a docentes.</p>
+  <p><b>Datos de referencia (a contrastar con los informes originales).</b> En los datos del servicio telefónico del curso 2020-21, los 12-13 años eran el grupo con más casos (31,5 %). En Euskadi, 1.º y 2.º de ESO concentraron el 47 % de los casos de acoso identificados en 2022-23. En ANAR 2025-26, el profesorado detecta casi la mitad de los casos por observación directa (46,1 %) y el 44,7 % porque el alumno lo cuenta: ambas vías existen.</p>
+  <p class="small"><b>Pendiente de confirmar para Canarias:</b> nombres y plazos del protocolo vigente, teléfono autonómico, figura del coordinador de bienestar en cada centro. Este piloto es una versión de prueba y no sustituye al protocolo del centro.</p>
+  <button class="btn" data-a="${S.mode===0 && !S._started?'intro':'menu'}">Volver</button></div>`);
+}
+function viewSummary(){
+  const t = buildSummary();
+  show(`<div class="card"><div class="kicker">Resumen anónimo de la sesión</div><h2 class="day">Para copiar en una hoja de cálculo</h2>
+  <textarea id="sumtxt" readonly aria-label="Resumen de sesión">${esc(t)}</textarea>
+  <div class="row"><button class="btn" data-a="copy">Copiar</button><button class="btn ghost" data-a="menu">Volver al menú</button></div><p class="small" id="cpmsg" aria-live="polite"></p></div>`);
+}
+function buildSummary(){
+  const L = [];
+  L.push('Ni uno menos · Piloto · Perfil A (1.º-2.º ESO)');
+  L.push('Test inicial: ' + (S.pre ? `${S.pre.score}/4 · autoeficacia ${S.pre.sc[0]}/5 · intención de avisar ${S.pre.sc[1]}/5` : 'no realizado'));
+  L.push('Test final: ' + (S.post ? `${S.post.score}/4 · autoeficacia ${S.post.sc[0]}/5 · intención de avisar ${S.post.sc[1]}/5` : 'no realizado'));
+  [1,2,3].forEach(m=>{ L.push(`Modo ${m} (${['','Su semana','Desde la clase','Reparar'][m]}): ${S.done[m]?'completado':'no completado'}`); S.log[m].forEach(x=>L.push('  - '+x)); });
+  L.push('Recursos descubiertos: ' + (Object.keys(S.bag).map(k=>BAG[k][0]).join('; ') || 'ninguno'));
+  return L.join('\n');
+}
+
+/* ---------- motor de escenas ---------- */
+function startMode(m){
+  S.paused = null;
+  S.mode = m; S.done[m] = false; S._started = true; S.log[m] = []; S.flags = {};
+  if (m === 1){ S.sleep=3; S.mood=3; S.focus=3; S.bonds=2;
+    S.queue = ['m1_intro','m1_lun_patio','m1_lun_aula','m1_lun_noche','sum_lun','m1_mar_guagua','m1_mar_mates','m1_mar_recreo','m1_mar_noche','sum_mar','m1_mie_manana','m1_mie_ia','sum_mie','m1_jue_decide','sum_jue','m1_vie','m1_end'];
+  } else if (m === 2){
+    S.W = null; S._w = {};
+    S.queue = ['m2_intro','m2_lun','m2_mar','m2_mie','m2_jue','m2_vie','m2_end'];
+  } else {
+    S.queue = ['m3_intro','m3_normas','m3_escucha','m3_iker','m3_compromisos','m3_end'];
+  }
+  next();
+}
+function next(){ const id = S.queue.shift(); if (!id){ viewMenu(); return; } S.curId = id; renderScene(SC[id]); }
+
+function renderScene(sc){
+  if (sc.type === 'sum') return renderSum(sc);
+  if (sc.type === 'mini') return renderMini(sc);
+  if (sc.type === 'info') return renderInfo(sc);
+  if (sc.type === 'end') return renderEnd(sc);
+  if (sc.type === 'multi') return renderMulti(sc);
+  const paras = sc.paras(S);
+  const ch = sc.choices(S);
+  S.answered = false; S._ch = ch;
+  show(`${stage(sc.place, sc.who)}<div class="card scene"><div class="day">${esc(sc.day)}</div><div aria-live="polite">${paras.map(p=>`<p>${fmt(p)}</p>`).join('')}</div>
+  <div class="opts" id="opts">${ch.map((c,i)=>`<button class="opt" data-a="choose" data-i="${i}">${fmt(c.t)}</button>`).join('')}</div></div>`);
+}
+function choose(i){
+  if (S.answered) return; S.answered = true;
+  const sc = SC[S.curId]; const c = S._ch[i];
+  applyFx(c.fx);
+  if (c.flag) S.flags[c.flag] = true;
+  if (c.flag2) S.flags[c.flag2] = true;
+  if (c.flags) for (const flag of c.flags) S.flags[flag] = true;
+  if (c.bag) unlock(c.bag);
+  if (S.mode === 2 && S._w){
+    if (c.flag) S._w[c.flag] = true;
+    if (c.flags) for (const flag of c.flags) S._w[flag] = true;
+  }
+  S.log[S.mode].push(`${sc.day}: ${c.t.replace(/\{n\}/g, S.name)}`);
+  if (c.goto) S.queue.unshift(...c.goto);
+  setVisual();
+  const opts = $('#opts');
+  opts.innerHTML = [...document.querySelectorAll('#opts .opt')].map((b,k)=>`<button class="opt ${k===i?'sel':''}" disabled style="cursor:default">${b.innerHTML}</button>`).join('');
+  let extra = '';
+  if (S.mode === 2 && c.fxN) extra = `<p class="small">Cómo lo vive ${esc(S.name)} (lo verás al volver a jugar «Su semana»): ${esc(c.fxN)}</p>`;
+  const note = c.note ? `<div class="note">${fmt(c.note)}</div>` : '';
+  const holder = document.createElement('div');
+  holder.innerHTML = `${note}${extra}<button class="btn" data-a="next" style="margin-top:6px">Continuar</button>`;
+  opts.parentNode.appendChild(holder);
+  holder.querySelector('button').focus({preventScroll:false});
+}
+function qual(v, hi, mid, lo){ return v >= 3 ? hi : v === 2 ? mid : lo; }
+function renderSum(sc){
+  const m = S.mood, s = S.sleep, f = S.focus, b = S.bonds;
+  const a = m >= 3 ? 'Hoy ha sido un día difícil, pero he podido respirar.' : m === 2 ? 'Hoy me ha costado mucho.' : 'Hoy se me ha hecho larguísimo.';
+  const c = s <= 1 ? ' Casi no he dormido.' : '';
+  const d = b >= 3 ? ' Hay gente que me ha tratado bien.' : b <= 1 ? ' Siento que no tengo a nadie aquí.' : '';
+  show(`${stage('casa', ['p'])}<div class="card"><div class="day">Fin del ${esc(sc.day.toLowerCase())}</div>
+  <div class="chips"><span class="chip">Descanso: <b>${qual(s,'bien','justo','mal')}</b></span><span class="chip">Ánimo: <b>${qual(m,'sostenido','bajo','muy bajo')}</b></span>
+  <span class="chip">Concentración: <b>${qual(f,'buena','dispersa','muy dispersa')}</b></span><span class="chip">Vínculos: <b>${qual(b,'con apoyo','pocos','sin apoyo')}</b></span></div>
+  <div class="diary">${esc(a + c + d)}</div>
+  <p class="small">El color de las escenas se apaga cuando el ánimo baja y la persona descansa mal. Es una forma de ver lo que se siente, no una puntuación.</p>
+  <button class="btn" data-a="next">Seguir</button></div>`);
+}
+function renderMini(sc){
+  const n = S.focus >= 3 ? 1 : S.focus === 2 ? 2 : 3;
+  const notes = [['Grupo 1.ºB','jajaja mirad la foto'],['Grupo 1.ºB','la tortuga ha llegado tarde'],['Grupo 1.ºB','alguien la ha visto?']];
+  S._mg = {dismissed:0, total:n, answer:null};
+  const toasts = notes.slice(0,n).map((t,i)=>`<button class="toast" data-a="dis" style="top:${6+i*58}px;left:${i%2?'18%':'4%'}"><small>${esc(t[0])}</small>${esc(t[1])}</button>`).join('');
+  show(`${stage('aula', ['p'])}<div class="card"><div class="day">Martes · Mates</div>
+  <p>El profe pregunta. Quieres responder, pero el móvil vibra en tu bolsillo: es el grupo. Apaga los avisos y contesta.</p>
+  <div class="mini" id="mini"><div style="min-height:${n*58+10}px;position:relative">${toasts}</div>
+  <p><b>¿Cuánto es 3/4 de 20?</b></p><div class="opts" id="mopts">${['12','15','16'].map(v=>`<button class="opt" data-a="mans" data-v="${v}">${v}</button>`).join('')}</div></div></div>`);
+}
+function miniAnswer(v){
+  if (S._mg.answer !== null) return; S._mg.answer = v;
+  const ok = v === '15', all = S._mg.dismissed >= S._mg.total;
+  S.log[1].push('Martes: Mates, respuesta ' + (ok ? 'correcta' : 'incorrecta') + (all ? ', con los avisos cerrados' : ', con avisos abiertos'));
+  if (!ok || !all) applyFx({focus:-1});
+  const msg = ok ? (all ? 'Aciertas: 15. Has cerrado los avisos y puedes seguir la clase.' : 'Aciertas: 15. Pero tu cabeza sigue en el chat y no oyes la siguiente pregunta.') : 'Te equivocas. No pasa nada, pero tu cabeza no estaba en clase. Con el chat abierto cuesta concentrarse.';
+  const mi = $('#mini'); mi.innerHTML = `<div class="note">${esc(msg)}</div><p class="small">Cuando alguien te hace sentir mal en un chat, la atención baja y las notas lo notan. No es falta de ganas.</p><button class="btn" data-a="next">Continuar</button>`;
+  setVisual();
+}
+function renderInfo(sc){
+  S.flags.protoVisto = true; unlock('cbp'); applyFx({mood:1, bonds:1, sleep:1}); setVisual();
+  show(`${stage('tutoria', ['p','t'])}<div class="card"><div class="day">Qué pasa después de pedir ayuda</div>
+  <p>Estos son los pasos que siguen los protocolos que se han revisado. Los nombres y los plazos concretos de tu centro los confirmará tu tutora.</p>
+  <ol class="steps"><li><b>Se comunica.</b> Una persona adulta del centro recibe la información.</li><li><b>Medidas de protección inmediatas.</b> Por ejemplo, cambiar sitios o reforzar la vigilancia en recreos y guagua.</li><li><b>Se valora.</b> Equipo directivo, tutoría y orientación comprueban si es acoso o un conflicto de otro tipo.</li><li><b>Se informa a las familias</b> y se elabora un plan de actuación con medidas para quien sufre, quien acosa y quienes miran.</li><li><b>Seguimiento.</b> Si es grave, el centro puede derivar a Inspección, servicios sociales o Fiscalía de Menores.</li></ol>
+  <div class="note">Esto lleva días, no horas. Pedir ayuda no lo arregla todo hoy, pero hace que dejes de llevarlo solo.</div>
+  <p class="small">Si tu centro tiene coordinador o coordinadora de bienestar y protección, también puede ayudarte.</p>
+  <button class="btn" data-a="next">Continuar</button></div>`);
+}
+function renderMulti(sc){
+  S._pick = [];
+  show(`${stage('circulo', ['m','p','i','o'])}<div class="card"><div class="day">${esc(sc.day)}</div><p>${fmt(sc.paras(S)[0])}</p>
+  <div class="opts" id="opts">${sc.options.map((o,i)=>`<button class="opt" data-a="pick" data-i="${i}" aria-pressed="false">${fmt(o[0])}</button>`).join('')}</div>
+  <button class="btn" data-a="confirm" id="cf" disabled>Confirmar</button></div>`);
+}
+function togglePick(i){
+  if(!$('#cf')) return;
+  const k = S._pick.indexOf(i);
+  if (k >= 0) S._pick.splice(k,1); else if (S._pick.length < 2) S._pick.push(i);
+  document.querySelectorAll('#opts .opt').forEach((b,j)=>{ const on = S._pick.includes(j); b.classList.toggle('sel', on); b.setAttribute('aria-pressed', on); });
+  $('#cf').disabled = S._pick.length !== 2;
+}
+function confirmPick(){
+  const sc = SC[S.curId]; const bad = S._pick.some(i=>!sc.options[i][1]);
+  S.log[3].push('Compromisos: ' + S._pick.map(i=>sc.options[i][0].replace(/\{n\}/g,S.name)).join(' | '));
+  const msg = bad ? 'Una de tus opciones pide a {n} que cargue con el trabajo de olvidar. Reparar es responsabilidad de quien causó o permitió el daño: se trata de acciones concretas, no de pedir silencio.' : 'Son compromisos concretos y revisables. El centro hará seguimiento y se volverá a ver cómo va dentro de dos semanas.';
+  $('#cf').outerHTML = `<div class="note">${fmt(msg)}</div><button class="btn" data-a="next" style="margin-top:6px">Continuar</button>`;
+  document.querySelectorAll('#opts .opt').forEach(b=>b.disabled=true);
+}
+function renderEnd(sc){
+  S.done[sc.mode] = true;
+  S.paused = null;
+  if (sc.mode === 2) S.W = {...S._w};
+  const msgs = {
+    1: ['Fin de «Su semana»', 'Aquí hay más de una puerta: familia, tutoría, orientación, una línea anónima y una amistad. Ninguna garantiza que todo cambie en un día, pero casi todas hacen que dejes de llevarlo solo. Pedir ayuda pronto suele ser más fácil que esperar.', 'Ahora juega «Desde la clase»: lo que decidas allí cambia lo que le pasa a ' + S.name + '.'],
+    2: ['Fin de «Desde la clase»', 'Quien ve el acoso también decide. Acompañar, no reenviar y avisar a un adulto son acciones pequeñas con efectos grandes. Tus decisiones ya cambian «Su semana»: vuelve a jugarla y compara.', 'Si quieres, pasa a «Reparar».'],
+    3: ['Fin de «Reparar»', 'Reparar no es olvidar ni obligar a ser amigos. Es reconocer el daño, escuchar y hacer cosas concretas con apoyo adulto. El centro sigue acompañando a todas las personas implicadas.', 'Ahora puedes hacer el test final y copiar el resumen de la sesión.']
+  }[sc.mode];
+  show(`${stage(sc.mode===3?'circulo':'aula', sc.mode===1?['p','t']:['m','p'])}<div class="card"><div class="day">${msgs[0]}</div><p>${esc(msgs[1])}</p>
+  <div class="note">${esc(msgs[2])}</div>
+  <div class="row"><button class="btn" data-a="menu">Volver al menú</button><button class="btn ghost" data-a="bag">Ver mi mochila</button></div></div>`);
+}
+
+/* ---------- eventos ---------- */
+document.addEventListener('click', e => {
+  const t = e.target.closest('[data-a]'); if (!t) return;
+  const a = t.dataset.a;
+  switch (a){
+    case 'start': { const v = ($('#nm') && $('#nm').value.trim()) || 'Noa'; S.name = v.slice(0,14); viewMenu(); break; }
+    case 'intro': viewIntro(); break;
+    case 'menu': pauseToMenu(); break;
+    case 'resume': resumeMode(); break;
+    case 'discard': S.paused = null; viewMenu(); break;
+    case 'help': viewHelp(); break;
+    case 'closehelp': closeHelp(); break;
+    case 'guide': viewGuide(); break;
+    case 'bag': viewBag(); break;
+    case 'summary': viewSummary(); break;
+    case 'copy': { const ta = $('#sumtxt'); const done = ok => { $('#cpmsg').textContent = ok ? 'Copiado.' : 'Selecciona el texto y cópialo con el teclado.'; };
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(ta.value).then(()=>done(true), ()=>{ ta.select(); done(false); }); else { ta.select(); done(false); } break; }
+    case 'test': viewPre(t.dataset.k); break;
+    case 'sendtest': submitTest(t.dataset.k); break;
+    case 'mode': startMode(+t.dataset.m); break;
+    case 'choose': choose(+t.dataset.i); break;
+    case 'next': next(); break;
+    case 'dis': { t.remove(); S._mg.dismissed++; break; }
+    case 'mans': miniAnswer(t.dataset.v); break;
+    case 'pick': togglePick(+t.dataset.i); break;
+    case 'confirm': confirmPick(); break;
+    case 'size+': S.size = Math.min(1.4, S.size + 0.1); document.documentElement.style.setProperty('--sz', S.size); break;
+    case 'size-': S.size = Math.max(0.9, S.size - 0.1); document.documentElement.style.setProperty('--sz', S.size); break;
+    case 'calm': S.calm = !S.calm; document.body.classList.toggle('calm', S.calm); t.textContent = S.calm ? 'Efectos: apagados' : 'Efectos: activos'; t.setAttribute('aria-pressed', S.calm); break;
+  }
+});
+document.addEventListener('keydown', e => {
+  const dialog = $('#ov');
+  if (!dialog) return;
+  if (e.key === 'Escape'){ e.preventDefault(); closeHelp(); return; }
+  if (e.key === 'Tab'){
+    const items = [...dialog.querySelectorAll('button:not([disabled]),a[href],input:not([disabled])')];
+    if (!items.length) return;
+    const first=items[0], last=items[items.length-1];
+    if (e.shiftKey && document.activeElement===first){ e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && document.activeElement===last){ e.preventDefault(); first.focus(); }
+  }
+});
+viewIntro();
+</script>
+
+</body></html>
